@@ -1,64 +1,103 @@
-# repo-template
+# Chekov
 
-A starting point for new personal repos, distilled from patterns already
-working across dhk's other repos (`work-ledger`, `familiar-places`, `fossil`,
-`crucible`, `skill-map`). Three goals drove the shape:
+**A control plane for agentic work: see what your agents are doing, where the work is headed, and what you want to happen next.**
 
-- **Instructive** — a stranger, human or Claude, can orient fast.
-- **Build in public** — the repo's own files carry the argument; nothing
-  depends on private context to make sense.
-- **Workflow-visible** — session continuity is a file, not a lost thread.
+Chekov provides situational awareness across AI-assisted work spread across tools, machines, sessions, and workspaces.
 
-## Use it
+It is built around three questions:
 
-```bash
-cp -r template/ ~/Documents/dev/<new-repo-name>
-cd ~/Documents/dev/<new-repo-name>
-# fill in the <placeholders> in README.md, CLAUDE.md, HANDOFF.md
-git init && git add -A && git commit -m "Initial scaffold from repo-template"
+1. **What's going on?** — What are agents doing now, what are they waiting on, and what work appears active?
+2. **What do I want to have happen?** — What outcomes, constraints, and next states has the user declared?
+3. **Are those aligned?** — Where is observed activity diverging from intent, duplicating effort, stalling, or proceeding without sufficient direction?
+
+Chekov is not a Jira replacement, not an agent transcript archive, and not primarily a retrospective analytics tool. It lives beneath conventional project management and above individual agent runtimes.
+
+```text
+Declared intent        Observed activity        Desired state
+      \                       |                      /
+       \                      |                     /
+        +------------------- Chekov ----------------+
+                            |
+                            v
+                 Situational awareness
+                            |
+                            v
+              Attention / course corrections
 ```
 
-Then work through [`SETUP.md`](template/SETUP.md) — the repo *settings* a file
-copy cannot carry.
+## Product boundary
 
-## What's in it, and why
+Chekov is deliberately present- and future-oriented.
 
-| File | Answers | Pattern it's drawn from |
-|---|---|---|
-| `README.md` | What is this, why does it exist, what's actually done vs. planned | familiar-places (names its competitor), work-ledger (status honesty, links design issues instead of restating them), crucible ("check me out") |
-| `CLAUDE.md` | Stack, architecture, conventions, **workflow rules** | Every repo's CLAUDE.md; workflow rules specifically from fossil |
-| `HANDOFF.md` | Where did I leave off, what's next, known gotchas | familiar-places/handoff.md |
-| `docs/snapshots/` | Frozen record of a design session or pivot, dated | fossil/context-snapshot.md, reading-with-ears' dated snapshots (relocated out of repo root — see below) |
-| `SETUP.md` | The repo settings that a file copy cannot carry — branch protection, Actions permissions, Pages, secrets, and the local `gh` scope | Learned by hitting each one; see the file's closing note |
-| `docs/design/` | Why a decision was made, not just what it is | praxis's four-question CONTRIBUTING.md frame, crucible/docs/concepts |
-| `.scratch/` (gitignored) | Ephemeral working files — never committed | adventures-in-ai, work-ledger, crucible, reading-with-ears all already do this |
-| `LICENSE` | Building in public means someone else can actually use this | Present in nearly every repo already |
+- **Work-Ledger** asks: *What happened?*
+- **Chekov** asks: *What's going on, where is it headed, and what do I want to happen next?*
+- **Beads and similar systems** may represent declared work, dependencies, and durable agent memory. Chekov can integrate with them, but does not replace them.
 
-## What's deliberately left out by default
+The disagreement between declared intent and observed activity is often the most valuable signal in the system.
 
-`CONTRIBUTING.md` and `.github/ISSUE_TEMPLATE/` aren't in the base template —
-most of these repos are solo build-in-public, not soliciting outside PRs. Add
-them per-repo (skill-map's `CONTRIBUTING.md` is a good model) once a project
-actually wants contributors.
+## Core concepts
 
-CI workflows (`.github/workflows/`) are project-specific by nature — copy the
-relevant one from `praxis`, `crucible`, `skill-map`, `tricorder`, or (for an
-Astro/Node static site — build + non-blocking `astro check`, since a
-type-check step usually needs to start informational until a codebase earns
-a hard gate) `DHK-website`, rather than templating a generic one that won't
-fit.
+### Workspace
 
-## HANDOFF.md vs. docs/snapshots/ — the split that matters
+A durable identity for a body of work. A workspace may appear at different filesystem paths on different machines and may contain multiple repositories or no repository at all.
 
-`HANDOFF.md` is **one file, always current, overwritten each session** — the
-first thing a fresh session (you or Claude) should read: where things stand,
-what's next, what to watch out for.
+### Agent session
 
-`docs/snapshots/YYYY-MM-DD-<topic>.md` is the opposite: **write-once,
-permanent** — the output of a design sprint or the reasoning behind a pivot,
-worth keeping forever.
+A bounded execution context from Claude Code, Codex, ChatGPT, another CLI agent, or a future integration.
 
-Don't let one collapse into the other. reading-with-ears' dated snapshot
-files committed loose at the repo root are the cautionary example — right
-instinct (capture the session), wrong location (repo root, not `docs/`;
-accumulating, not superseding a living handoff doc).
+### Intent
+
+What the user has asked an agent, workspace, or investigation to accomplish. Intent may include constraints such as *research only*, *do not implement*, *stop after producing a recommendation*, or *do not touch production*.
+
+### Desired state
+
+A condition the user wants to become true. Desired state is not necessarily a task list. It may be an outcome, decision point, artifact, level of confidence, or stopping condition.
+
+### Observed state
+
+What Chekov can determine is actually happening from agent/session telemetry and workspace evidence.
+
+### Exception
+
+A meaningful mismatch between observed state, declared intent, and desired state. Examples include duplicated investigations, implementation occurring during a research-only phase, work continuing after the desired state has been reached, or important desired outcomes with no active agent.
+
+## First target experience
+
+```text
+$ chekov
+
+4 workspaces · 7 agents · 2 machines
+
+IDENTITY-MATCHING
+Desired: Determine whether clinical evidence improves matching
+
+  claude@lobster   investigating DOB drift       active
+  codex@mac        testing scoring thresholds    active
+
+  ON COURSE
+  Next: reconcile findings and produce recommendation
+
+TRICORDER
+Desired: Complete PR maturity analysis
+
+  claude@mac       waiting for input             37m
+
+  NEEDS ATTENTION
+  No agent currently owns the unresolved review step
+
+EXCEPTIONS
+  Codex is modifying implementation in a research-only workspace
+  Two agents appear to be investigating the same question
+```
+
+## Governance
+
+The repository's product hierarchy is:
+
+**[CONSTITUTION.md](CONSTITUTION.md) → [DESIGN.md](DESIGN.md) → [ROADMAP.md](ROADMAP.md) → implementation**
+
+The Constitution contains enduring product constraints. The Design describes the initial system model. The Roadmap orders delivery without turning speculative capabilities into commitments.
+
+## Status
+
+Chekov is at product-definition stage. The first implementation milestone is a local-first CLI that can identify active/recent Claude Code and Codex sessions across a machine, associate them with workspaces, attach declared intent, and surface useful mismatches.
