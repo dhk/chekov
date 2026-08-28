@@ -100,4 +100,51 @@ The Constitution contains enduring product constraints. The Design describes the
 
 ## Status
 
-Chekov is at product-definition stage. The first implementation milestone is a local-first CLI that can identify active/recent Claude Code and Codex sessions across a machine, associate them with workspaces, attach declared intent, and surface useful mismatches.
+Phase 1 is implemented: the local CLI discovers Claude Code and Codex session
+stores on one machine, associates sessions with durable workspace identities,
+observes Git working-tree changes, records normalized state and provenance in
+SQLite, and presents a compact deterministic status view.
+
+Intent, desired state, exception reconciliation, cross-machine aggregation,
+semantic interpretation, and agent control are deliberately deferred to later
+roadmap phases.
+
+## Install and run
+
+Chekov requires Python 3.11 or newer and has no runtime dependencies.
+
+```bash
+python -m venv .venv
+. .venv/bin/activate
+python -m pip install -e .
+chekov
+```
+
+Use `chekov --sources` to display provenance for each assertion. By default,
+Chekov reads `~/.claude/projects/**/*.jsonl` and
+`~/.codex/sessions/**/*.jsonl`. It extracts only session metadata and event
+envelopes; transcript bodies are neither retained nor copied into Chekov's
+store. Local state is written beneath `~/.local/share/chekov`. Set
+`CHEKOV_HOME` to override that location.
+
+Session state is deterministic: activity within two minutes is active, records
+within 24 hours are recent, older records are idle, and a recent terminal agent
+event is shown as waiting. The thresholds can be adjusted with
+`--active-minutes` and `--recent-hours`.
+
+Workspace identity prefers `.chekov/workspace.json`, then a normalized Git
+origin URL, then Git's common directory, with an absolute directory path only
+as the final fallback. An explicit marker looks like:
+
+```json
+{"id": "my-durable-workspace-id"}
+```
+
+## Development
+
+```bash
+PYTHONPATH=src python -m unittest discover -s tests
+```
+
+The test suite uses temporary fixture session stores and does not inspect the
+developer's actual Claude Code or Codex data.
