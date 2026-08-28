@@ -13,7 +13,7 @@ Create a control plane for agentic work that lets a user understand:
 
 ## Phase 0 — Product definition
 
-**Status: current**
+**Status: complete**
 
 Establish the product boundary and vocabulary.
 
@@ -33,6 +33,8 @@ Exit criteria:
 - current state, intent, desired state, and exceptions are independently defined.
 
 ## Phase 1 — Single-machine situational awareness
+
+**Status: implemented**
 
 **Goal:** Answer “what's going on?” reliably on one machine.
 
