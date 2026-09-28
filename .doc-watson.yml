@@ -1,0 +1,61 @@
+# Doc Watson enrollment: this repository's documentation contract.
+# Schema: https://github.com/dhk/doc-watson/blob/main/schemas/enrollment.schema.json
+# Level, audience, trigger decisions and exemptions are owner-declared facts.
+# Tools may question them; only the owner changes them.
+# Declared by the owner 2026-09-28 from the baseline audit's drafts.
+
+schema: 1
+standard: 0.3.0 # standard version last audited against
+level: 1 # declared by the owner, 2026-09-28
+audience: The owner running agentic work across Claude Code and Codex, and readers of the public product definition.
+
+# One decision per trigger rule, each with its reason.
+triggers:
+  install-guide:
+    applies: false
+    reason: One source install path fits in the README (README.md:112-121).
+  user-guides:
+    applies: false
+    reason: The README's run and options sections reach first success (README.md:112-141).
+  architecture:
+    applies: false
+    reason: The implemented CLI is small (src/chekov, 13 files); DESIGN.md carries the product model.
+  adrs:
+    applies: false
+    reason: Enduring constraints live in CONSTITUTION.md; no decision with recorded alternatives yet needs its own record.
+  agent-memory:
+    applies: false
+    reason: No root CLAUDE.md or HANDOFF.md; template/ holds only placeholders, and no evidence shows agents returning across sessions.
+  machine-contracts:
+    applies: true
+    reason: Chekov parses the user-authored .chekov/workspace.json marker (src/chekov/identity.py:34-45), documented in README.md:135-141.
+  codeowners:
+    applies: false
+    reason: One owner (.github/CODEOWNERS:5); no shared review routing.
+  contributing:
+    applies: false
+    reason: Outside contributions are not invited (owner, 2026-09-28).
+  governance:
+    applies: false
+    reason: One maintainer; the README's "Governance" section is a product document hierarchy, not maintainer authority.
+  roadmap:
+    applies: false
+    reason: No public audience is evident (no stars, forks or issues); ROADMAP.md serves the owner's sequencing.
+  runbooks:
+    applies: false
+    reason: A local CLI; nothing is hosted or pages anyone.
+  handover:
+    applies: false
+    reason: No other party operates this repository.
+
+# Concerns deliberately not met. Truthfulness, hygiene and duplication, and
+# maintenance and verification cannot be exempted.
+exemptions: []
+
+last_audit:
+  revision: "3e7b9ac"
+  date: "2026-09-28"
+  record: https://github.com/dhk/doc-watson-audit/tree/main/audits/dhk/chekov/2026-09-28
+
+# What a sweep may do on divergence: issue-and-draft-pr, issue, or report.
+on_drift: issue-and-draft-pr
