@@ -140,6 +140,28 @@ as the final fallback. An explicit marker looks like:
 {"id": "my-durable-workspace-id"}
 ```
 
+## What Chekov touches on your machine
+
+Each `chekov` run does the following, and nothing else:
+
+- **Reads** every `*.jsonl` file under `~/.claude/projects/` and
+  `~/.codex/sessions/`, line by line, taking only timestamps, session IDs,
+  the working directory (`cwd`) and event types. It also reads
+  `.chekov/workspace.json` in each workspace, if present.
+- **Runs git** in every workspace directory those session records name, if the
+  directory still exists: `git rev-parse --show-toplevel`,
+  `git remote get-url origin`, `git rev-parse --git-common-dir` and
+  `git status --porcelain=v1 -z`. None of them commits, fetches, or changes
+  tracked files.
+- **Stores**, in SQLite at `~/.local/share/chekov/chekov.db` (or under
+  `CHEKOV_HOME`): each workspace's name, absolute path and identity (marker ID,
+  normalized origin remote URL, or Git directory path); each session's runtime,
+  ID, start and last-activity times, state and transcript file path; changed-file
+  counts from `git status`; and this host's hostname. A random host UUID and the
+  hostname are written to `config.json` in the same directory on first run.
+
+Nothing is sent over the network. Transcript message content is not stored.
+
 ## Development
 
 ```bash

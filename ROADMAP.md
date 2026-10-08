@@ -13,19 +13,22 @@ Create a control plane for agentic work that lets a user understand:
 
 ## Phase 0 — Product definition
 
-**Status: complete**
+**Status: complete except the prior-art review**
 
 Establish the product boundary and vocabulary.
 
-Deliverables:
+Delivered:
 
 - Constitution;
 - design document;
 - roadmap;
 - repository README;
 - explicit separation from Work-Ledger;
-- explicit integration boundary with Beads and task systems;
-- initial prior-art review.
+- explicit integration boundary with Beads and task systems.
+
+Planned, not yet done:
+
+- initial prior-art review (no review document exists in this repository yet).
 
 Exit criteria:
 

@@ -39,8 +39,8 @@ triggers:
     applies: false
     reason: One maintainer; the README's "Governance" section is a product document hierarchy, not maintainer authority.
   roadmap:
-    applies: false
-    reason: No public audience is evident (no stars, forks or issues); ROADMAP.md serves the owner's sequencing.
+    applies: true
+    reason: Public repository that invites contributions; ROADMAP.md states direction (owner, 2026-10-08).
   runbooks:
     applies: false
     reason: A local CLI; nothing is hosted or pages anyone.
