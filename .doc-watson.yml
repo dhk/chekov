@@ -25,7 +25,7 @@ triggers:
     reason: Enduring constraints live in CONSTITUTION.md; no decision with recorded alternatives yet needs its own record.
   agent-memory:
     applies: false
-    reason: No root CLAUDE.md or HANDOFF.md; template/ holds only placeholders, and no evidence shows agents returning across sessions.
+    reason: No root CLAUDE.md or HANDOFF.md, and no evidence shows agents returning across sessions.
   machine-contracts:
     applies: true
     reason: Chekov parses the user-authored .chekov/workspace.json marker (src/chekov/identity.py:34-45), documented in README.md:135-141.
